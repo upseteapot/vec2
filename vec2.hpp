@@ -1,7 +1,7 @@
 #pragma once
 #include <cmath>
-#define vec2_sfml(vec)     sf::Vector2f(vec.x,  vec.y)
-#define inv_vec2_sfml(vec) sf::Vector2f(vec.x, -vec.y)
+#define vec2_sfml(vec)     sf::Vector2f((vec).x,  (vec).y)
+#define inv_vec2_sfml(vec) sf::Vector2f((vec).x, -(vec).y)
 
 
 ///////////////////////////////////////////////////////////////////////////////////
