@@ -10,25 +10,28 @@ struct Vec2
 {
     T x, y;
 
-                          Vec2():                   x(0), y(0) {}
-    template <typename U> Vec2(U _x, U _y):         x(static_cast<T>(_x)), y(static_cast<T>(_y)) {}
+    Vec2(): x(0), y(0) {}
+    template <typename U> Vec2(U _x, U _y): x(static_cast<T>(_x)), y(static_cast<T>(_y)) {}
     template <typename U> Vec2(const Vec2<U> &vec): x(static_cast<T>(vec.x)), y(static_cast<T>(vec.y)) {}
      
-    float  mag        () const;
-    float  angle      () const;
-    void   norm       ();
-    void   set_angle  (float angle);
-    void   rotate     (float d_angle);
-    void   constrain  (float max_mag);
+    float  mag       () const;
+    float  angle     () const;
+    void   norm      ();
+    void   set_angle (float angle);
+    void   set_mag   (float new_mag);
+    void   rotate    (float d_angle);
+    void   constrain (float max_mag);
 
-    static Vec2<T>  polar      (float r, float angle);
-    static float    mag        (const Vec2<T> &vec);
-    static float    angle      (const Vec2<T> &vec);
-    static Vec2<T>  norm       (const Vec2<T> &vec);
-    static Vec2<T>  set_angle  (const Vec2<T> &vec, float angle);
-    static Vec2<T>  rotate     (const Vec2<T> &vec, float d_angle);
-    static Vec2<T>  constrain  (const Vec2<T> &vec, float max_mag);
-    static float    dot        (const Vec2<T> &a,   const Vec2<T> &b);
+    static Vec2<T>  polar     (float r, float angle);
+    static Vec2<T>  norm      (const Vec2<T> &vec);
+    static Vec2<T>  set_angle (const Vec2<T> &vec, float angle);
+    static Vec2<T>  set_mag   (const Vec2<T> &vec, float new_mag);
+    static Vec2<T>  rotate    (const Vec2<T> &vec, float d_angle);
+    static Vec2<T>  constrain (const Vec2<T> &vec, float max_mag);
+    
+    static float  dot           (const Vec2<T> &a, const Vec2<T> &b);
+    static float  dist          (const Vec2<T> &a, const Vec2<T> &b);
+    static float  angle_between (const Vec2<T> &a, const Vec2<T> &b);
 };
 
 
@@ -166,6 +169,13 @@ template <typename T> void Vec2<T>::set_angle(float angle)
     y = sin(angle) * current_mag;
 }
 
+template <typename T> void Vec2<T>::set_mag(float new_mag)
+{
+    float ratio = new_mag / mag();
+    x *= ratio;
+    y *= ratio;
+}
+
 template <typename T> void Vec2<T>::rotate(float d_angle)
 {
     set_angle(angle() + d_angle);
@@ -187,16 +197,6 @@ template <typename T> inline Vec2<T> Vec2<T>::polar(float r, float angle)
     return Vec2<T>(cos(angle) * r, sin(angle) * r);
 }
 
-template <typename T> inline float Vec2<T>::mag(const Vec2<T> &vec)
-{
-    return vec.mag();
-}
-
-template <typename T> inline float Vec2<T>::angle(const Vec2<T> &vec)
-{
-    return vec.angle();
-}
-
 template <typename T> inline Vec2<T> Vec2<T>::norm(const Vec2<T> &vec)
 {
     return vec / vec.mag();
@@ -204,10 +204,12 @@ template <typename T> inline Vec2<T> Vec2<T>::norm(const Vec2<T> &vec)
 
 template <typename T> inline Vec2<T> Vec2<T>::set_angle(const Vec2<T> &vec, float angle)
 {
-    float current_mag = vec.mag();
-    T x = cos(angle) * current_mag;
-    T y = sin(angle) * current_mag;
-    return Vec2<T>(x, y);
+    return Vec2<T>::polar(vec.mag(), angle);
+}
+
+template <typename T> inline Vec2<T> Vec2<T>::set_mag(const Vec2<T> &vec, float new_mag)
+{
+    return vec * (new_mag / vec.mag());
 }
 
 template <typename T> inline Vec2<T> Vec2<T>::rotate(const Vec2<T> &vec, float d_angle)
@@ -223,9 +225,21 @@ template <typename T> inline Vec2<T> Vec2<T>::constrain(const Vec2<T> &vec, floa
     return vec * (max_mag / current_mag); 
 }
 
+
+///////////////////////////////////////////////////////////////////////////////////
 template <typename T> inline float Vec2<T>::dot(const Vec2<T> &a, const Vec2<T> &b)
 {
     return a.x * b.x + a.y * b.y;
+}
+
+template <typename T> inline float Vec2<T>::dist(const Vec2<T> &a, const Vec2<T> &b)
+{
+    return (a - b).mag();
+}
+
+template <typename T> inline float Vec2<T>::angle_between(const Vec2<T> &a, const Vec2<T> &b)
+{
+    return acos(Vec2::dot(a, b) / (a.mag() * b.mag));
 }
 
 
