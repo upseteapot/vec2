@@ -1,7 +1,10 @@
 #pragma once
 #include <cmath>
-#define vec2_sfml(vec)     sf::Vector2f((vec).x,  (vec).y)
-#define inv_vec2_sfml(vec) sf::Vector2f((vec).x, -(vec).y)
+
+#define rad_degrees(x)      x * 180 / 3.14159265
+#define degrees_rad(x)      x * 3.14159265 / 180
+#define vec2_sfml(vec)      sf::Vector2f((vec).x,  (vec).y)
+#define inv_vec2_sfml(vec)  sf::Vector2f((vec).x, -(vec).y)
 
 
 ///////////////////////////////////////////////////////////////////////////////////
