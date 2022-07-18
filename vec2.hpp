@@ -3,8 +3,10 @@
 
 #define rad_degrees(x)      x * 180 / 3.14159265
 #define degrees_rad(x)      x * 3.14159265 / 180
-#define vec2_sfml(vec)      sf::Vector2f((vec).x,  (vec).y)
-#define inv_vec2_sfml(vec)  sf::Vector2f((vec).x, -(vec).y)
+
+#define sfml_vec2f(vec)      Vec2f(vec.x, vec.y)
+#define vec2f_sfml(vec)      sf::Vector2f((vec).x,  (vec).y)
+#define inv_vec2f_sfml(vec)  sf::Vector2f((vec).x, -(vec).y)
 
 
 ///////////////////////////////////////////////////////////////////////////////////
@@ -148,6 +150,18 @@ template <typename T, typename U> inline Vec2<T>& operator/=(Vec2<T>& left, U ri
 
 
 ///////////////////////////////////////////////////////////////////////////////////
+template <typename T> inline bool operator!=(const Vec2<T>& left, const Vec2<T>& right)
+{
+  return !(left.x == right.x && left.y == right.y);
+}
+
+template <typename T> inline bool operator==(const Vec2<T>& left, const Vec2<T>& right)
+{
+  return left.x == right.x && left.y == right.y;
+}
+
+
+///////////////////////////////////////////////////////////////////////////////////
 template <typename T> float Vec2<T>::mag() const
 {
     return sqrt(pow(x, 2) + pow(y, 2));
@@ -242,7 +256,7 @@ template <typename T> inline float Vec2<T>::dist(const Vec2<T> &a, const Vec2<T>
 
 template <typename T> inline float Vec2<T>::angle_between(const Vec2<T> &a, const Vec2<T> &b)
 {
-    return acos(Vec2::dot(a, b) / (a.mag() * b.mag));
+    return acos(Vec2::dot(a, b) / (a.mag() * b.mag()));
 }
 
 
